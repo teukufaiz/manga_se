@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Title of the page</title>
+    <style>
+        /* Center the title */
+        h1 {
+            text-align: center;
+            font-size: 4rem;
+        }
+        
+        /* Position the title and description */
+        #title-desc {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: calc(100vh - 50px); /* 50px is the height of the navbar */
+        }
+        
+        #description {
+            max-width: 800px;
+            margin-top: 50px;
+            text-align:center;
+            font-family: 'Times New Roman', Times, serif;
+        }
+
+        /* Style the login button */
+        #login-btn {
+            background-color: #4CAF50;
+            border: none;
+            color: white;
+            padding: 15px 32px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 1.5rem;
+            margin-top: 50px;
+            cursor: pointer;
+        }
+        
+        #login-btn:hover {
+            background-color: #3e8e41;
+        }
+        
+        
+    </style>
+</head>
+<body>  
+    <div id="title-desc">
+        <h1>Manga Search Engine</h1>
+        <p id="description">Welcome to our manga search engine! Our platform is designed to help you easily find and discover your favorite manga series, and add them to your personal favorites list.<br>
+
+            With our search engine, you can quickly find the manga you're looking for by title. Once you've found a manga that you love, you can easily add it to your favorites list for quick and easy access later. No more sifting through pages of search results to find your favorite manga series!<br>
+            
+            Our search engine is designed to be user-friendly and intuitive, so you can easily navigate and find what you're looking for.<br>
+            
+            So why wait? Start searching for your favorite manga series today and add them to your favorites list for easy access anytime, anywhere!</p>
+        <a href="{% url 'login' %}"><button id="login-btn">Log in</button></a>
+    </div>
+</body>
+</html>

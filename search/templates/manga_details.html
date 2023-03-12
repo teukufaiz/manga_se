@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>{{ manga.title }}</title>
+    <style>
+        body {
+            background-color: #fdfdfd;
+            font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
+            font-size: 13px;
+            color: #000000;
+        }
+        h1 {
+            font-size: 28px;
+            font-weight: bold;
+            color: #2e51a2;
+            margin: 15px 0;
+        }
+        img {
+            width: 225px;
+            height: 318px;
+            margin-right: 20px;
+            float: left;
+        }
+        ul {
+            list-style: none;
+            padding: 0;
+            margin: 0 0 20px 0;
+            font-size: 14px;
+        }
+        ul li {
+            margin-bottom: 5px;
+        }
+        ul li strong {
+            display: inline-block;
+            width: 125px;
+            color: #7d7d7d;
+            font-weight: bold;
+        }
+        p {
+            line-height: 1.2em;
+            margin: 0 0 20px 0;
+        }
+        .container {
+            max-width: 1000px;
+            margin: auto;
+            padding: 20px;
+            border: 1px solid #ddd;
+            background-color: #fff;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+        }
+        .details {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+        }
+        .details ul {
+            margin: 0;
+        }
+        .details ul li {
+            display: inline-block;
+            margin-right: 10px;
+        }
+        /* Navbar styles */
+        nav {
+            background-color: #333;
+            overflow: hidden;
+        }
+        
+        nav a {
+            color: white;
+            text-align: center;
+            padding: 14px 16px;
+            text-decoration: none;
+            font-size: 1.5rem;
+        }
+        
+        nav a:hover {
+            background-color: #ddd;
+            color: black;
+        }
+        
+        /* Position the "About" and "Contact" links to the right */
+        nav .right {
+            float: right;
+        }
+        nav .left {
+            float: left;
+        }
+    </style>
+</head>
+<body>
+    <nav>
+        <a href="{% url 'manga_list' %}" class="left">Manga List</a>
+        <a href="{% url 'home' %}" class="right">Logout</a>
+        <a href="#" class="right">Favorites</a>
+    </nav>
+    <div>
+        <div class="container">
+            <h1>{{ manga.title }}</h1>
+            <img src="{{ manga.main_picture }}" alt="{{ manga.title }} cover">
+            <p>{{ manga.synopsis }}</p>
+            
+            <ul>
+                <li><strong>Type:</strong> {{ manga.type }}</li>
+                <li><strong>Score:</strong> {{ manga.score }}</li>
+                <li><strong>Scored by:</strong> {{ manga.scored_by }}</li>
+                <li><strong>Status:</strong> {{ manga.status }}</li>
+                <li><strong>Volumes:</strong> {{ manga.volumes }}</li>
+                <li><strong>Chapters:</strong> {{ manga.chapters }}</li>
+                <li><strong>Start date:</strong> {{ manga.start_date }}</li>
+                <li><strong>End date:</strong> {{ manga.end_date }}</li>
+                <li><strong>Genres:</strong> {{ manga.genres }}</li>
+                <li><strong>Themes:</strong> {{ manga.themes }}</li>
+                <li><strong>Demographics:</strong> {{ manga.demographics }}</li>
+                <li><strong>URL:</strong> <a href="{{ manga.url }}">{{ manga.url }}</a></li>
+                <li><strong>English title:</strong> {{ manga.title_english }}</li>
+                <li><strong>Japanese title:</strong> {{ manga.title_japanese }}</li>
+                <li><strong>Synonyms:</strong> {{ manga.title_synonyms }}</li>
+            </ul>
+        </div>
+    </div>
+    </body>
+    </html>

@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <title>Comics List</title>
+    <style>
+      /* Main container styles */
+      .container {
+        margin: 0 auto;
+        max-width: 1200px;
+        padding: 20px;
+        position: relative; /* add position property */
+        }
+
+      /* Comics list item styles */
+      .comic {
+        display: inline-block;
+        vertical-align: top;
+        width: 300px;
+        margin: 10px;
+        padding: 10px;
+        border: 1px solid #ddd;
+        border-radius: 3px;
+        cursor: pointer;
+        }
+
+        .comic img {
+            width: 200px;
+            height: 300px;
+            object-fit: cover;
+        }
+
+        .comic-info h3 {
+        margin: 0;
+        font-size: 18px;
+        font-weight: bold;
+        margin-bottom: 10px;
+        }
+
+        .comic-info p {
+        margin: 0;
+        font-size: 14px;
+        color: #888;
+        margin-bottom: 10px;
+        }
+
+        .comic-info .tags {
+        display: flex;
+        flex-wrap: wrap;
+        margin-top: 10px;
+        }
+
+        .comic-info .tags span {
+        display: inline-block;
+        margin-right: 5px;
+        margin-bottom: 5px;
+        padding: 5px;
+        border-radius: 3px;
+        background-color: #f2f2f2;
+        color: #666;
+        font-size: 12px;
+        line-height: 1;
+        }
+
+      /* Search form styles */
+      .search-form {
+        position: absolute; /* change position property to absolute */
+        top: 0; /* add top property */
+        left: 0; /* add left property */
+        width: 100%; /* add width property */
+        padding: 20px; /* add padding property */
+        text-align: center;
+        }
+      .search-form input[type="text"] {
+        padding: 10px;
+        border: none;
+        border-radius: 3px;
+        box-shadow: 0 0 5px #ddd;
+        font-size: 14px;
+        width: 300px;
+        max-width: 100%;
+      }
+      .search-form input[type="submit"] {
+        padding: 10px 20px;
+        border: none;
+        border-radius: 3px;
+        background-color: #0077ff;
+        color: #fff;
+        font-size: 14px;
+        cursor: pointer;
+      }
+      .hide {
+        display: none;
+        }
+
+        .pagination {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        margin-top: 20px;
+      }
+
+      .pagination a,
+      .pagination span {
+        margin: 0 10px;
+        padding: 5px 10px;
+        border: 1px solid #ddd;
+        border-radius: 3px;
+        font-size: 14px;
+        color: #333;
+        text-decoration: none;
+      }
+
+      .pagination .current-page {
+        margin: 0 10px;
+        padding: 5px 10px;
+        border: 1px solid #ddd;
+        border-radius: 3px;
+        font-size: 14px;
+        color: #fff;
+        background-color: #333;
+      }
+
+      /* Navbar styles */
+      nav {
+            background-color: #333;
+            overflow: hidden;
+        }
+        
+        nav a {
+            color: white;
+            text-align: center;
+            padding: 14px 16px;
+            text-decoration: none;
+            font-size: 1.5rem;
+        }
+        
+        nav a:hover {
+            background-color: #ddd;
+            color: black;
+        }
+        
+        /* Position the "About" and "Contact" links to the right */
+        nav .right {
+            float: right;
+        }
+        nav .left {
+            float: left;
+        }
+    </style>
+  </head>
+  <body>
+    <nav>
+      <a href="{% url 'manga_list' %}" class="left">Manga List</a>
+      <a href="{% url 'home' %}" class="right">Logout</a>
+      <a href="{% url 'favorite_manga' %}" class="right">Favorites</a>
+    </nav>
+    <div class="container">
+
+      <h1>Search Manga</h1>
+      <form class="search-form" action="{% url 'manga_search' %}" method="get">
+        <input type="text" name="q" placeholder="Search comics...">
+        <input type="submit" value="Search">
+      </form>
+    
+      {% if query %}
+      <h2>Search results for "{{ query }}"</h2>
+      {% endif %}
+      
+      <div id="comics-container">
+        {% for manga in filtered_manga_list %}
+        <a href="{% url 'manga_details' manga_id=manga.manga_id %}">
+          <div class="comic">
+            <div class="comic-info">
+              <h3>{{ manga.title }}</h3>
+              <img src="{{ manga.main_picture }}"/>
+              <p>{{ manga.synopsis }}</p>
+              <div class="tags">
+                <span>{{ manga.genres }}</span>
+                <span>{{ manga.themes }}</span>
+                <span>{{ manga.demographics }}</span>
+              </div>
+              <div class="tags">
+                <span>Score: {{ manga.score }}/10</span>
+                <span>Chapters: {{ manga.chapters }}</span>
+              </div>
+              {% if request.user.is_authenticated %}
+              {% if manga.manga_id not in favorite_manga_ids %}
+              <!-- <form action="{% url 'remove_favorite_manga' manga_id=manga.manga_id %}" method="POST">
+                {% csrf_token %}
+                <button type="submit">Remove from Favorites</button>
+              </form>
+              {% else %} -->
+              <form method="POST" action="{% url 'add_favorite_manga' %}">
+                {% csrf_token %}
+                <input type="hidden" name="manga_id" value="{{ manga.manga_id }}">
+                <button type="submit" class="add-favorite-btn">Add to favorites</button>
+              </form>
+              {% endif %}
+              {% endif %}
+            </div>
+          </div>
+        </a>
+        {% empty %}
+        {% if query %}
+        <p>No results found.</p>
+        {% else %}
+        <p>No manga found.</p>
+        {% endif %}
+        {% endfor %}
+      </div>
+      
+      <div class="pagination">
+        <span class="step-links">
+          {% if filtered_manga_list.has_previous %}
+          <a href="?q={{ query }}&page=1">&laquo; first</a>
+          <a href="?q={{ query }}&page={{ filtered_manga_list.previous_page_number }}">previous</a>
+          {% endif %}
+          
+          <span class="current-page">
+            Page {{ filtered_manga_list.number }} of {{ filtered_manga_list.paginator.num_pages }}
+          </span>
+          
+          {% if filtered_manga_list.has_next %}
+          <a href="?q={{ query }}&page={{ filtered_manga_list.next_page_number }}">next</a>
+          <a href="?q={{ query }}&page={{ filtered_manga_list.paginator.num_pages }}">last &raquo;</a>
+          {% endif %}
+        </span>
+      </div>
+    </div>
+  </body> 
+  </html>
